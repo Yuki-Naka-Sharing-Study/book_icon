@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_items">
+        <item>東京</item>
+        <item>大阪</item>
+        <item>京都</item>
+        <item>福岡</item>
+        <item>北海道</item>
+        <item>沖縄</item>
+    </string-array>
+
+    <string-array name="pref_lat_lon">
+        <item>東京の緯度：度, 東京の経度：度</item>
+        <item>大阪の緯度：度, 大阪の経度：度</item>
+        <item>京都の緯度：度, 京都の経度：度</item>
+        <item>福岡の緯度：度, 福岡の経度：度</item>
+        <item>北海道の緯度：度, 北海道の経度：度</item>
+        <item>沖縄の緯度：度, 沖縄の経度：度</item>
+    </string-array>
+
+</resources>

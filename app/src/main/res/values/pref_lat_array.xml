@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_lat_array">
+        <item>35.01833</item>
+        <item>34.62278</item>
+        <item>35.25194</item>
+        <item>33.5225</item>
+        <item>43.46722</item>
+        <item>25.77111</item>
+    </string-array>
+
+</resources>
