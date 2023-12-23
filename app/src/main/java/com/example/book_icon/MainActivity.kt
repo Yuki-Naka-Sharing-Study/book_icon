@@ -1,7 +1,10 @@
 package com.example.book_icon
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -10,8 +13,11 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.book_icon.ui.HistoryFragment
 import com.example.book_icon.ui.report.ReportFragment
 import com.example.book_icon.ui.book.BookFragment as BookFragment
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
             when (item.itemId) {
-                R.id.navigation_book -> {
+                R.id.fragment_book -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.frameLayout, BookFragment())
                         .commit()
@@ -38,7 +44,7 @@ class MainActivity : AppCompatActivity() {
                     return@OnNavigationItemSelectedListener true
                 }
 
-                R.id.navigation_report -> {
+                R.id.fragment_report -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.frameLayout, ReportFragment())
                         .commit()
@@ -102,5 +108,25 @@ class MainActivity : AppCompatActivity() {
                 toolbarString = ""
             }
         }
+
     }
+
+
+    //画面がタッチされた時に反応するやつ
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        // InputMethodManagerを取得
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        //背景のlinearLayoutを取得
+        val constraintLayout = findViewById<ConstraintLayout>(R.id.container)
+        // キーボードを閉じる
+        inputMethodManager.hideSoftInputFromWindow(
+            constraintLayout.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS
+        )
+
+        return false
+    }
+
+
 }
