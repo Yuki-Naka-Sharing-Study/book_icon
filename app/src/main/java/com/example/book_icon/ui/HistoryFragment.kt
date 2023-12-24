@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.book_icon.HistoryAdapter
 import com.example.book_icon.R
 import com.example.book_icon.ui.book.PrefLatLon
 
@@ -28,8 +29,10 @@ class HistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        historyRecyclerView = view.findViewById(R.id.history_recycler_view)
+        historyRecyclerView.adapter = historyAdapter
         historyLayoutManager = LinearLayoutManager(requireContext())
-        // historyAdapter = HistoryAdapter()
+
 
         //② 「(Mutable) List」の作成。「(Mutable) List」と「RecyclerView」はセットで使う。
         //画面に表示するのは「選択した各都道府県 (pref)」「気温 (temperature)」「天気 (weathercode)」
