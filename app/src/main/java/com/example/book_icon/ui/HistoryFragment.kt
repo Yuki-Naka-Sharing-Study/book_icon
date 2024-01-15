@@ -5,19 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.book_icon.HistoryAdapter
+import com.example.book_icon.MainActivity
 import com.example.book_icon.R
-import com.example.book_icon.ui.book.PrefLatLon
 
 
 class HistoryFragment : Fragment() {
 
-    //③ 「RecyclerView」の作成。
+    private lateinit var historyAdapter: HistoryAdapter
     private lateinit var historyRecyclerView: RecyclerView
     private lateinit var historyLayoutManager: RecyclerView.LayoutManager
-    private lateinit var historyAdapter: RecyclerView.Adapter<*>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,21 +29,29 @@ class HistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        historyRecyclerView = view.findViewById(R.id.history_recycler_view)
-        historyRecyclerView.adapter = historyAdapter
-        historyLayoutManager = LinearLayoutManager(requireContext())
-
-
-        //② 「(Mutable) List」の作成。「(Mutable) List」と「RecyclerView」はセットで使う。
-        //画面に表示するのは「選択した各都道府県 (pref)」「気温 (temperature)」「天気 (weathercode)」
-        val historyList: MutableList<PrefLatLon> = mutableListOf()
-
-        for (item in historyList) {
-
-            //historyList.add("何かの変数")
+        val mainActivity = activity as MainActivity?
+        if (mainActivity != null) {
+            mainActivity.getHistoryData()
         }
 
-    }
+        if (mainActivity != null) {
+            historyAdapter = HistoryAdapter(mainActivity.getHistoryData())
+            historyLayoutManager = LinearLayoutManager(requireContext())
+        }
 
+        historyRecyclerView = view.findViewById<RecyclerView?>(R.id.history_recycler_view).also {
+            it.adapter = historyAdapter
+            it.layoutManager = historyLayoutManager
+        }
+
+        (historyLayoutManager as LinearLayoutManager).orientation = LinearLayoutManager.HORIZONTAL
+        historyRecyclerView.layoutManager = historyLayoutManager
+
+        // 以下の処理はリストに区切り線を入れる処理
+        val dividerItemDecoration =
+            DividerItemDecoration(requireContext() , LinearLayoutManager(requireContext()).getOrientation())
+        historyRecyclerView.addItemDecoration(dividerItemDecoration)
+
+    }
 
 }

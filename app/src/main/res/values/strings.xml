@@ -4,4 +4,9 @@
     <string name="title_report">Report</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="pref_history_name_text">都道府県の履歴</string>
+    <string name="temp_history_text">気温の履歴</string>
+    <string name="weather_history_text">天気の履歴</string>
+
 </resources>

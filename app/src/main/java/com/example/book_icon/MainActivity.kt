@@ -14,10 +14,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.example.book_icon.ui.HistoryFragment
 import com.example.book_icon.ui.report.ReportFragment
 import com.example.book_icon.ui.book.BookFragment as BookFragment
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,11 +24,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private var toolbarString: String = ""
     private var position: Int = 0
+    private var historyList: MutableList<HistoryData> = mutableListOf()
 
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
             when (item.itemId) {
+
                 R.id.fragment_book -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.frameLayout, BookFragment())
@@ -56,7 +56,9 @@ class MainActivity : AppCompatActivity() {
                     position = 1
                     return@OnNavigationItemSelectedListener true
                 }
+
             }
+
             false
         }
 
@@ -72,7 +74,6 @@ class MainActivity : AppCompatActivity() {
 
         val navigation: BottomNavigationView = findViewById(R.id.navigation)
         navigation.setOnItemSelectedListener(mOnNavigationItemSelectedListener)
-
         // 初期表示
         supportFragmentManager.beginTransaction()
             .replace(R.id.frameLayout, BookFragment())
@@ -111,6 +112,13 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    fun addHistoryData(historyData: HistoryData) {
+        historyList.add(historyData)
+    }
+
+    fun getHistoryData(): MutableList<HistoryData> {
+        return historyList
+    }
 
     //画面がタッチされた時に反応するやつ
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -124,9 +132,7 @@ class MainActivity : AppCompatActivity() {
             constraintLayout.windowToken,
             InputMethodManager.HIDE_NOT_ALWAYS
         )
-
         return false
     }
-
 
 }

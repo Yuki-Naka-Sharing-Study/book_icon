@@ -2,4 +2,25 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="history_recycler_view_width">400dp</dimen>
+    <dimen name="history_recycler_view_height">400dp</dimen>
+
+    <!-- 都道府県の名前の文字のサイズ -->
+    <dimen name="pref_history_name_text_size">20sp</dimen>
+    <!-- 気温の文字のサイズ -->
+    <dimen name="temp_history_text_size">20sp</dimen>
+    <!-- 天気の文字のサイズ -->
+    <dimen name="weather_history_text_size">20sp</dimen>
+
+    <!-- 都道府県の名前の幅と高さ -->
+    <dimen name="pref_history_name_text_width">136sp</dimen>
+    <dimen name="pref_history_name_text_height">48sp</dimen>
+    <!-- 気温の幅と高さ -->
+    <dimen name="temp_history_text_width">136sp</dimen>
+    <dimen name="temp_history_text_height">48sp</dimen>
+    <!-- 天気の幅と高さ -->
+    <dimen name="weather_history_text_width">136sp</dimen>
+    <dimen name="weather_history_text_height">48sp</dimen>
+
 </resources>

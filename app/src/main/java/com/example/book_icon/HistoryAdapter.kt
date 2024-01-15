@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class HistoryAdapter(
-    private val historyData: ArrayList<String>
-    //【MY仮説】いあkの１行は間違っていないはず。上の<>の中に何を入れるべきか？
-): RecyclerView.Adapter<HistoryViewHolder>() {
 
-    override fun getItemCount(): Int = historyData.size
+class HistoryAdapter(historyList: MutableList<HistoryData>): RecyclerView.Adapter<HistoryViewHolder>() {
+
+    private val _historyList: MutableList<HistoryData> = historyList
+
+    override fun getItemCount(): Int = _historyList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -17,9 +17,7 @@ class HistoryAdapter(
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        //【理解していること】ここで引数「holder」を使うことは理解できている。
-        //【MY仮説】「HistoryHolder」の関数を使う。
-        //holder.getHistory(historyData.get(position))
+        holder.getHistory(_historyList.get(position))
     }
 
 }

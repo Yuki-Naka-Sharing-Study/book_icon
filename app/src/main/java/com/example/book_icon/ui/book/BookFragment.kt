@@ -17,6 +17,8 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.book_icon.HistoryData
+import com.example.book_icon.MainActivity
 import com.example.book_icon.PrefAdapter
 import com.example.book_icon.PrefViewHolder
 import com.example.book_icon.R
@@ -34,8 +36,12 @@ class BookFragment : Fragment() {
 
     private lateinit var selectedPrefLatLon: ArrayList<PrefLatLon>
 
+    private var prefName: String = ""
     private var lat: String = ""
     private var lon: String = ""
+
+    private lateinit var choicedPrefLatLon: PrefLatLon
+
     private var count: Int = 0
 
     private lateinit var tempWeatherTextView: TextView
@@ -166,6 +172,7 @@ class BookFragment : Fragment() {
 
                         lat = PrefLatLon.values().get(position).prefLat
                         lon = PrefLatLon.values().get(position).prefLon
+                        choicedPrefLatLon = PrefLatLon.values().get(position)
 
                     }
 
@@ -187,10 +194,10 @@ class BookFragment : Fragment() {
                     requestButton.isEnabled = false
                 }
 
-                if (lat == "" && lon == "") {
-                    requestApi(lat, lon)
+                if (lat == "" && lon == "" && prefName == "") {
+                    requestApi(choicedPrefLatLon)
                 } else {
-                    requestApi(lat, lon)
+                    requestApi(choicedPrefLatLon)
                 }
 
             } else {
@@ -200,22 +207,17 @@ class BookFragment : Fragment() {
                     if (count == 0 || count == 1) {
                         requestButton.isEnabled = false
                     }
-
-                    requestApi(i.prefLat, i.prefLon)
+                    requestApi(i)
 
                 }
             }
 
         }
 
-        // ここで新しく「requestButton」を作成か？
-
         resetButton.setOnClickListener {
             tempWeatherTextView.text = ""
         }
 
-        //「HistoryFragment」に画面遷移
-        //【林さんコメント】「replace」と「commit」を使った。「findNavController」でも課題を解ける。
         historyButton.setOnClickListener {
 
             parentFragmentManager.beginTransaction().apply {
@@ -229,8 +231,8 @@ class BookFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    fun requestApi(lat: String, lon: String) {
-
+    fun requestApi(prefLatLon: PrefLatLon) {
+        //「never used」になっている「prefLatLon」をどこでどう使うべきか？　そもそも使わなくてもいいのか？
         val url =
             "https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true"
 
@@ -245,6 +247,12 @@ class BookFragment : Fragment() {
                 currentWeather.get("temperature")
                 val temperature: Double = currentWeather.getDouble("temperature")
                 val weathercode: Int = currentWeather.getInt("weathercode")
+
+                val historyData = HistoryData(prefName, temperature.toString(), currentWeather.toString())
+                val mainActivity = activity as MainActivity?
+                if (mainActivity != null) {
+                    mainActivity.addHistoryData(historyData)
+                }
 
                 tempWeatherTextView.append(
                     "平均気温は${temperature}°C \n 今日の天気は${weathercode}です。"
@@ -270,7 +278,6 @@ class BookFragment : Fragment() {
         )
 
         queue.add(jsonObjectRequest)
-
 
     }
 
