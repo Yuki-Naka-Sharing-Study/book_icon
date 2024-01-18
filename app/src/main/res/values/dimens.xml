@@ -3,24 +3,38 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="gps_image_view_width">80dp</dimen>
+    <dimen name="gps_image_view_height">80dp</dimen>
+
     <dimen name="history_recycler_view_width">400dp</dimen>
     <dimen name="history_recycler_view_height">400dp</dimen>
 
     <!-- 都道府県の名前の文字のサイズ -->
     <dimen name="pref_history_name_text_size">20sp</dimen>
+
     <!-- 気温の文字のサイズ -->
     <dimen name="temp_history_text_size">20sp</dimen>
+
     <!-- 天気の文字のサイズ -->
     <dimen name="weather_history_text_size">20sp</dimen>
 
     <!-- 都道府県の名前の幅と高さ -->
     <dimen name="pref_history_name_text_width">136sp</dimen>
     <dimen name="pref_history_name_text_height">48sp</dimen>
+
     <!-- 気温の幅と高さ -->
     <dimen name="temp_history_text_width">136sp</dimen>
     <dimen name="temp_history_text_height">48sp</dimen>
+
     <!-- 天気の幅と高さ -->
     <dimen name="weather_history_text_width">136sp</dimen>
     <dimen name="weather_history_text_height">48sp</dimen>
+
+    <dimen name="temp_weather_text_size">12sp</dimen>
+
+    <!-- 「リクエスト」「リセット」「履歴」の各ボタンのテキストサイズ -->
+    <dimen name="request_button_text_size">12sp</dimen>
+    <dimen name="reset_button_text_size">12sp</dimen>
+    <dimen name="history_button_text_size">12sp</dimen>
 
 </resources>

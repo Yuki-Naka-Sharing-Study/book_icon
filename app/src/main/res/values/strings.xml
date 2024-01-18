@@ -9,4 +9,8 @@
     <string name="temp_history_text">気温の履歴</string>
     <string name="weather_history_text">天気の履歴</string>
 
+    <string name="request_button_text">リクエスト</string>
+    <string name="reset_button_text">リセット</string>
+    <string name="history_button_text">履歴</string>
+
 </resources>

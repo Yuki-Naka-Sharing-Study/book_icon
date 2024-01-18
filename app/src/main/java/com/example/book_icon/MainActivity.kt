@@ -33,7 +33,8 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.fragment_book -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.frameLayout, BookFragment())
+                        //【元々のコード】.replace(R.id.frameLayout, BookFragment())
+                        .replace(R.id.container, BookFragment())
                         .commit()
                     if (toolbarString.isEmpty()) {
                         textView.text = "本アイコンの画面"
@@ -46,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.fragment_report -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.frameLayout, ReportFragment())
+                        .replace(R.id.container, ReportFragment())
                         .commit()
                     if (toolbarString.isEmpty()) {
                         textView.text = "レポートアイコンの画面"
@@ -81,6 +82,7 @@ class MainActivity : AppCompatActivity() {
 
         val imageView: ImageView = findViewById(R.id.imageView)
         imageView.setOnClickListener {
+
             if (editText.text.toString() == "") {
                 AlertDialog.Builder(this)
                     .setTitle("エラー")
@@ -91,6 +93,7 @@ class MainActivity : AppCompatActivity() {
                 toolbarString = editText.text.toString()
                 textView.text = toolbarString
             }
+
         }
 
         val button: Button = findViewById(R.id.button)

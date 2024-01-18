@@ -1,5 +1,6 @@
 package com.example.book_icon.ui.book
 
+
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,7 +28,6 @@ import org.json.JSONObject
 
 
 @Suppress("CAST_NEVER_SUCCEEDS")
-
 class BookFragment : Fragment() {
 
     private lateinit var prefRecyclerView: RecyclerView
@@ -58,7 +58,6 @@ class BookFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_book, container, false)
-
         return view
     }
 
@@ -165,6 +164,13 @@ class BookFragment : Fragment() {
 
                         count = 1
 
+
+                    } else if (PrefLatLon.values().get(position).pref == "GPS") {
+
+                        prefRecyclerView.visibility = View.INVISIBLE
+                        lat
+                        lon
+
                         // spinnerで表示される単一の都道府県を選択したときの処理
                     } else {
 
@@ -221,7 +227,7 @@ class BookFragment : Fragment() {
         historyButton.setOnClickListener {
 
             parentFragmentManager.beginTransaction().apply {
-                replace(R.id.fragment_book, HistoryFragment())
+                replace(R.id.container, HistoryFragment())
                 addToBackStack(null)
                 commit()
             }
@@ -231,7 +237,7 @@ class BookFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    fun requestApi(prefLatLon: PrefLatLon) {
+    fun requestApi(choicedPrefLatLon: PrefLatLon) {
         //「never used」になっている「prefLatLon」をどこでどう使うべきか？　そもそも使わなくてもいいのか？
         val url =
             "https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true"
@@ -248,14 +254,14 @@ class BookFragment : Fragment() {
                 val temperature: Double = currentWeather.getDouble("temperature")
                 val weathercode: Int = currentWeather.getInt("weathercode")
 
-                val historyData = HistoryData(prefName, temperature.toString(), currentWeather.toString())
+                val historyData = HistoryData(choicedPrefLatLon.pref, temperature.toString(), getCode(weathercode))
                 val mainActivity = activity as MainActivity?
                 if (mainActivity != null) {
                     mainActivity.addHistoryData(historyData)
                 }
 
                 tempWeatherTextView.append(
-                    "平均気温は${temperature}°C \n 今日の天気は${weathercode}です。"
+                    "平均気温は${temperature}°C \n 今日の天気は${getCode(weathercode)}です。"
                 )
 
                 if (count == 0 || count == 1) {
@@ -284,6 +290,7 @@ class BookFragment : Fragment() {
 
     fun getCode(weathercode: Int): String {
         var code: String = "悪天候"
+        // 元々のコード
         when (weathercode) {
             0 -> code = "晴れ"
             1 -> code = "晴れのち曇り"
@@ -303,5 +310,6 @@ enum class PrefLatLon(val pref: String, val prefLat: String, val prefLon: String
     FUKUOKA("福岡", "33.5225", "130.6681"),
     HOKKAIDO("北海道", "43.46722", "142.8278"),
     OKINAWA("沖縄", "25.77111", "126.64"),
-    SELECT("select", "", "")
+    SELECT("SELECT", "", ""),
+    GPS("GPS", "" ,"")
 }
