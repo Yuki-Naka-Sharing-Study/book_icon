@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private var toolbarString: String = ""
     private var position: Int = 0
     private var historyList: MutableList<HistoryData> = mutableListOf()
+    private lateinit var testCommit: TextView
 
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
