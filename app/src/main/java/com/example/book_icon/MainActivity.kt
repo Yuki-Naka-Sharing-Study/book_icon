@@ -14,10 +14,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.MutableLiveData
 import com.example.book_icon.ui.report.ReportFragment
 import com.example.book_icon.ui.book.BookFragment as BookFragment
 
 class MainActivity : AppCompatActivity() {
+
 
     private lateinit var toolbar: Toolbar
     private lateinit var textView: TextView
@@ -25,7 +27,19 @@ class MainActivity : AppCompatActivity() {
     private var toolbarString: String = ""
     private var position: Int = 0
     private var historyList: MutableList<HistoryData> = mutableListOf()
-    private lateinit var testCommit: TextView
+
+    var observedNowLocationValue: NowLocation? = null
+
+    var latitude: Double? = null
+    var longitude: Double? = null
+
+    val nowLocation: MutableLiveData<NowLocation> by lazy {
+        MutableLiveData<NowLocation>()
+    }
+    init{
+        nowLocation.value = NowLocation(latitude, longitude)
+    }
+
 
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -34,7 +48,6 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.fragment_book -> {
                     supportFragmentManager.beginTransaction()
-                        //【元々のコード】.replace(R.id.frameLayout, BookFragment())
                         .replace(R.id.container, BookFragment())
                         .commit()
                     if (toolbarString.isEmpty()) {
@@ -63,6 +76,7 @@ class MainActivity : AppCompatActivity() {
 
             false
         }
+
 
     @SuppressLint("MissingInflatedId", "ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,15 +128,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        nowLocation.observe(this) {
+            observedNowLocationValue = it
+        }
+
     }
+
 
     fun addHistoryData(historyData: HistoryData) {
         historyList.add(historyData)
     }
 
+
     fun getHistoryData(): MutableList<HistoryData> {
         return historyList
     }
+
 
     //画面がタッチされた時に反応するやつ
     override fun onTouchEvent(event: MotionEvent?): Boolean {

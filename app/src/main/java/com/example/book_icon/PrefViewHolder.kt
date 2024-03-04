@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.book_icon.ui.book.PrefLatLon
 
 
-//「RecyclerView.ViewHolder」は１つの要素を描画するための View を保持
 class PrefViewHolder(itemView: View, private val listener: ConfirmChecked) : RecyclerView.ViewHolder(itemView) {
 
     private var prefCheckBox: CheckBox = itemView.findViewById(R.id.pref_checkbox)

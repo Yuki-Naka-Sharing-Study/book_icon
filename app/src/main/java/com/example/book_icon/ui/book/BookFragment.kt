@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
@@ -24,11 +25,16 @@ import com.example.book_icon.PrefAdapter
 import com.example.book_icon.PrefViewHolder
 import com.example.book_icon.R
 import com.example.book_icon.ui.HistoryFragment
+import com.google.android.gms.location.FusedLocationProviderClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 
 @Suppress("CAST_NEVER_SUCCEEDS")
 class BookFragment : Fragment() {
+
 
     private lateinit var prefRecyclerView: RecyclerView
     private lateinit var prefLayoutManager: RecyclerView.LayoutManager
@@ -164,12 +170,18 @@ class BookFragment : Fragment() {
 
                         count = 1
 
-
-                    } else if (PrefLatLon.values().get(position).pref == "GPS") {
+                    } else if(PrefLatLon.values().get(position).pref == "GPS") {
 
                         prefRecyclerView.visibility = View.INVISIBLE
-                        lat
-                        lon
+
+                        val mainActivity = activity as MainActivity
+                        if (mainActivity.observedNowLocationValue != null) {
+                            lat = mainActivity.observedNowLocationValue!!.nowLocationLatitude.toString()
+                            lon = mainActivity.observedNowLocationValue!!.nowLocationLatitude.toString()
+                        } else {
+                            // 失敗処理
+                            tempWeatherTextView.text = "平均気温と今日の天気を表示することに失敗しました。"
+                        }
 
                         // spinnerで表示される単一の都道府県を選択したときの処理
                     } else {
@@ -201,21 +213,32 @@ class BookFragment : Fragment() {
                 }
 
                 if (lat == "" && lon == "" && prefName == "") {
-                    requestApi(choicedPrefLatLon)
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.Main){
+                            requestApi(choicedPrefLatLon)
+                        }
+                    }
                 } else {
-                    requestApi(choicedPrefLatLon)
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.Main){
+                            requestApi(choicedPrefLatLon)
+                        }
+                    }
                 }
 
             } else {
 
                 for (i in selectedPrefLatLon) {
-
                     if (count == 0 || count == 1) {
                         requestButton.isEnabled = false
                     }
-                    requestApi(i)
-
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.Main){
+                            requestApi(i)
+                        }
+                    }
                 }
+
             }
 
         }
@@ -225,20 +248,19 @@ class BookFragment : Fragment() {
         }
 
         historyButton.setOnClickListener {
-
             parentFragmentManager.beginTransaction().apply {
                 replace(R.id.container, HistoryFragment())
                 addToBackStack(null)
                 commit()
             }
-
         }
 
     }
 
+
     @SuppressLint("SetTextI18n")
-    fun requestApi(choicedPrefLatLon: PrefLatLon) {
-        //「never used」になっている「prefLatLon」をどこでどう使うべきか？　そもそも使わなくてもいいのか？
+    suspend fun requestApi(choicedPrefLatLon: PrefLatLon) = withContext(Dispatchers.IO){
+
         val url =
             "https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true"
 
@@ -310,6 +332,6 @@ enum class PrefLatLon(val pref: String, val prefLat: String, val prefLon: String
     FUKUOKA("福岡", "33.5225", "130.6681"),
     HOKKAIDO("北海道", "43.46722", "142.8278"),
     OKINAWA("沖縄", "25.77111", "126.64"),
-    SELECT("SELECT", "", ""),
-    GPS("GPS", "" ,"")
+    SELECT("select", "", ""),
+    GPS("GPS", "", "")
 }
