@@ -21,9 +21,10 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 
-class ReportFragment : Fragment() {
+class ReportFragment :Fragment() {
 
 
     private lateinit var gpsImageView: ImageView
@@ -32,7 +33,7 @@ class ReportFragment : Fragment() {
     private lateinit var textViewReport: TextView
     var latitude: Double? = null
     var longitude: Double? = null
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    @Inject lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
 
     override fun onCreateView(

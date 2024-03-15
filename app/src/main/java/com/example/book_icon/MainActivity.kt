@@ -16,8 +16,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.MutableLiveData
 import com.example.book_icon.ui.report.ReportFragment
+import dagger.hilt.android.AndroidEntryPoint
 import com.example.book_icon.ui.book.BookFragment as BookFragment
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
 
@@ -40,49 +42,47 @@ class MainActivity : AppCompatActivity() {
         nowLocation.value = NowLocation(latitude, longitude)
     }
 
-
-    private val mOnNavigationItemSelectedListener =
-        BottomNavigationView.OnNavigationItemSelectedListener { item ->
-
-            when (item.itemId) {
-
-                R.id.fragment_book -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, BookFragment())
-                        .commit()
-                    if (toolbarString.isEmpty()) {
-                        textView.text = "本アイコンの画面"
-                    } else {
-                        textView.text = toolbarString
-                    }
-                    position = 0
-                    return@OnNavigationItemSelectedListener true
-                }
-
-                R.id.fragment_report -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, ReportFragment())
-                        .commit()
-                    if (toolbarString.isEmpty()) {
-                        textView.text = "レポートアイコンの画面"
-                    } else {
-                        textView.text = toolbarString
-                    }
-                    position = 1
-                    return@OnNavigationItemSelectedListener true
-                }
-
-            }
-
-            false
-        }
-
-
     @SuppressLint("MissingInflatedId", "ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val mOnNavigationItemSelectedListener =
+            BottomNavigationView.OnNavigationItemSelectedListener { item ->
+
+                when (item.itemId) {
+
+                    R.id.fragment_book -> {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, BookFragment())
+                            .commit()
+                        if (toolbarString.isEmpty()) {
+                            textView.text = "本アイコンの画面"
+                        } else {
+                            textView.text = toolbarString
+                        }
+                        position = 0
+                        return@OnNavigationItemSelectedListener true
+                    }
+
+                    R.id.fragment_report -> {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, ReportFragment())
+                            .commit()
+                        if (toolbarString.isEmpty()) {
+                            textView.text = "レポートアイコンの画面"
+                        } else {
+                            textView.text = toolbarString
+                        }
+                        position = 1
+                        return@OnNavigationItemSelectedListener true
+                    }
+
+                }
+
+                false
+            }
 
         toolbar = findViewById(R.id.toolbar)
         editText = findViewById(R.id.editTextText)

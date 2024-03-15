@@ -25,7 +25,6 @@ import com.example.book_icon.PrefAdapter
 import com.example.book_icon.PrefViewHolder
 import com.example.book_icon.R
 import com.example.book_icon.ui.HistoryFragment
-import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
