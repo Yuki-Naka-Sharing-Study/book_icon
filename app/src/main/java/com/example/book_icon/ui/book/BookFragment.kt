@@ -3,6 +3,7 @@ package com.example.book_icon.ui.book
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +16,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.Request
 import com.android.volley.RequestQueue
-import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.book_icon.BookIconService
 import com.example.book_icon.HistoryData
 import com.example.book_icon.MainActivity
 import com.example.book_icon.PrefAdapter
@@ -28,7 +28,8 @@ import com.example.book_icon.ui.HistoryFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 @Suppress("CAST_NEVER_SUCCEEDS")
@@ -257,55 +258,40 @@ class BookFragment : Fragment() {
     }
 
 
-    @SuppressLint("SetTextI18n")
-    suspend fun requestApi(choicedPrefLatLon: PrefLatLon) = withContext(Dispatchers.IO){
+    private suspend fun requestApi(choicedPrefLatLon: PrefLatLon) = withContext(Dispatchers.IO){
 
-        val url =
-            "https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true"
+        val baseUrl =
+            "https://api.open-meteo.com"
 
-        val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.GET, url, null,
-            { response
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
-                ->
+        val service: BookIconService = retrofit.create(BookIconService::class.java)
 
-                val currentWeather: JSONObject =
-                    response.getJSONObject("current_weather")
-                currentWeather.get("temperature")
-                val temperature: Double = currentWeather.getDouble("temperature")
-                val weathercode: Int = currentWeather.getInt("weathercode")
+        val currentWeather = try {
+            service.getCurrentWeather(choicedPrefLatLon.prefLat.toDouble(), choicedPrefLatLon.prefLon.toDouble())
+        } catch (e: Exception) {
+            Log.e("BookFragment", "requestApi", e)
+            tempWeatherTextView.text = "平均気温と今日の天気を表示することに失敗しました。"
 
-                val historyData = HistoryData(choicedPrefLatLon.pref, temperature.toString(), getCode(weathercode))
-                val mainActivity = activity as MainActivity?
-                if (mainActivity != null) {
-                    mainActivity.addHistoryData(historyData)
-                }
+            return@withContext
+        }
 
-                tempWeatherTextView.append(
-                    "平均気温は${temperature}°C \n 今日の天気は${getCode(weathercode)}です。"
-                )
+        val temperature = currentWeather.current_weather.temperature
+        val weatherCode = currentWeather.current_weather.weathercode
+        val historyData = HistoryData(choicedPrefLatLon.pref, temperature.toString(), getCode(
+            weatherCode
+        ))
+        val mainActivity = activity as MainActivity?
+        if (mainActivity != null) {
+            mainActivity.addHistoryData(historyData)
+        }
 
-                if (count == 0 || count == 1) {
-                    requestButton.isEnabled = true
-                }
-
-                count = 1
-            },
-
-            {
-                tempWeatherTextView.text = "平均気温と今日の天気を表示することに失敗しました。"
-
-                if (count == 0 || count == 1) {
-                    requestButton.isEnabled = true
-                }
-
-                count = 1
-            }
-
+        tempWeatherTextView.append(
+            "平均気温は${temperature}°C \n 今日の天気は${getCode(weatherCode)}です。"
         )
-
-        queue.add(jsonObjectRequest)
-
     }
 
 
